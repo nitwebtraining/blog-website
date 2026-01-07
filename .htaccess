@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# 1. Shudhu domain hit korle (Home Page)
+RewriteRule ^$ frontend/index.php [L]
+
+# 2. domain/index.php er jonno
+RewriteRule ^index\.php$ frontend/index.php [L]
+
+# 3. domain/blog.php er jonno
+RewriteRule ^blog\.php$ frontend/blog.php [L]
+
+# 4. domain/blog-details.php er jonno
+RewriteRule ^blog-details\.php$ frontend/blog-details.php [L]

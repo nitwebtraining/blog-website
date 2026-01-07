@@ -1,0 +1,169 @@
+<?php
+    require_once __DIR__ . '/../config.php';
+    // Dashboard functionality can be added here
+    if (! isset($_SESSION['user_id'])) {
+        header("Location: /admin/login");
+        exit();
+    } else {
+        $user = $_SESSION['user_id'];
+        $sql  = "SELECT * FROM users WHERE id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$user]);
+        $authUser = $stmt->fetch();
+    }
+
+    $contact_stmt = $pdo->prepare("SELECT * FROM contacts");
+    $contact_stmt->execute();
+    $contact_list  = $contact_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $total_contact = number_format(count($contact_list));
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+ <?php require_once __DIR__ . '/includes/head.php'; ?>
+
+
+<body id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+   <?php require_once __DIR__ . '/includes/sidebar.php'; ?>
+   <!-- Sidebar -->
+   <div id="content-wrapper" class="d-flex flex-column">
+       <div id="content">
+        <!-- TopBar -->
+           <?php require_once __DIR__ . '/includes/topbar.php'; ?>
+        <!-- Topbar -->
+
+        <!-- Container Fluid-->
+        <div class="container-fluid" id="container-wrapper">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+          </div>
+
+          <div class="row mb-3">
+            <!-- POST Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Total Number of Post</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">1,000</div>
+                      <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                        <span>Since last month</span>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-primary"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Total Number of Users</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">500</div>
+                      <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 12%</span>
+                        <span>Since last month</span>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-users fa-2x text-success"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Total Number of Query</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $total_contact ?></div>
+                      <div class="mt-2 mb-0 text-muted text-xs">
+                        <span><a href="/admin/contact-list" class="text-info">View All</a></span>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-comments fa-2x text-info"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-uppercase mb-1">Total Number of Categories</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">50</div>
+                      <div class="mt-2 mb-0 text-muted text-xs">
+                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 5.00%</span>
+                        <span>Since last month</span>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-list fa-2x text-warning"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Row-->
+
+
+        </div>
+        <!---Container Fluid-->
+      </div>
+      <!-- Footer -->
+      <?php require_once __DIR__ . '/includes/footer.php'; ?>
+      <!-- Footer -->
+    </div>
+  </div>
+
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabelLogout">Logout Confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to logout?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <a href="/admin/logout" class="btn btn-danger">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php require_once __DIR__ . '/includes/script.php'; ?>
+</body>
+
+</html>
