@@ -40,4 +40,18 @@
         </div>
       </li>
       <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#blogID"
+          aria-expanded="true" aria-controls="blogID">
+          <i class="fas fa-list"></i>
+          <span>Blog Manage</span>
+        </a>
+        <div id="blogID" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/admin/blogs">Blog List</a>
+          </div>
+        </div>
+      </li>
+      <hr class="sidebar-divider">
     </ul>
