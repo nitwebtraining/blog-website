@@ -72,6 +72,20 @@ switch ($request) {
         require_once __DIR__ . '/backend/categories/delete.php';
         break;
 
+    // blog route
+    case '/admin/blogs':
+        require_once __DIR__ . '/backend/blogs/index.php';
+        break;
+    case '/admin/blog/create':
+        require_once __DIR__ . '/backend/blogs/create.php';
+        break;
+    case '/admin/blog/edit':
+        require_once __DIR__ . '/backend/blogs/edit.php';
+        break;
+    case '/admin/blog/delete':
+        require_once __DIR__ . '/backend/blogs/delete.php';
+        break;
+
     default:
         http_response_code(404);
         require_once __DIR__ . '/frontend/404.php';
