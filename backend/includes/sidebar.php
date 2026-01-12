@@ -26,4 +26,18 @@
         </div>
       </li>
       <hr class="sidebar-divider">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#categoryID"
+          aria-expanded="true" aria-controls="categoryID">
+          <i class="fas fa-list"></i>
+          <span>Category Manage</span>
+        </a>
+        <div id="categoryID" class="collapse" aria-labelledby="headingBootstrap" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/admin/categories">Category List</a>
+          </div>
+        </div>
+      </li>
+      <hr class="sidebar-divider">
     </ul>

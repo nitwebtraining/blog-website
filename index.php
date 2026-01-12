@@ -58,6 +58,20 @@ switch ($request) {
         require_once __DIR__ . '/backend/contact/contact-list.php';
         break;
 
+    // category route
+    case '/admin/categories':
+        require_once __DIR__ . '/backend/categories/index.php';
+        break;
+    case '/admin/category/create':
+        require_once __DIR__ . '/backend/categories/create.php';
+        break;
+    case '/admin/category/edit':
+        require_once __DIR__ . '/backend/categories/edit.php';
+        break;
+    case '/admin/category/delete':
+        require_once __DIR__ . '/backend/categories/delete.php';
+        break;
+
     default:
         http_response_code(404);
         require_once __DIR__ . '/frontend/404.php';
