@@ -1,10 +1,15 @@
+<?php
+    $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY id desc");
+    $stmt->execute();
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <div class="card p-4 mb-4" data-aos="fade-left">
                     <h5 class="widget-title">Categories</h5>
                     <div class="category-list">
-                        <a href="#" class="category-link"><span>Web Design</span> <span class="badge bg-light text-dark">12</span></a>
-                        <a href="#" class="category-link"><span>Gadgets</span> <span class="badge bg-light text-dark">8</span></a>
-                        <a href="#" class="category-link"><span>Mobile Apps</span> <span class="badge bg-light text-dark">5</span></a>
-                        <a href="#" class="category-link"><span>Lifestyle</span> <span class="badge bg-light text-dark">3</span></a>
+                        <?php foreach ($categories as $category): ?>
+                        <a href="#" class="category-link"><span><?php echo $category['name'] ?></span> <span class="badge bg-light text-dark">12</span></a>
+                       <?php endforeach?>
                     </div>
                 </div>
 

@@ -16,6 +16,11 @@
     $contact_stmt->execute();
     $contact_list  = $contact_stmt->fetchAll(PDO::FETCH_ASSOC);
     $total_contact = number_format(count($contact_list));
+
+    $category_stmt = $pdo->prepare("SELECT * FROM categories");
+    $category_stmt->execute();
+    $categories       = $category_stmt->fetchAll(PDO::FETCH_ASSOC);
+    $total_categories = number_format(count($categories));
 ?>
 
 <!DOCTYPE html>
@@ -112,10 +117,9 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-uppercase mb-1">Total Number of Categories</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">50</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo $total_categories ?></div>
                       <div class="mt-2 mb-0 text-muted text-xs">
-                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 5.00%</span>
-                        <span>Since last month</span>
+                        <span><a href="/admin/categories" class="text-info">View All</a></span>
                       </div>
                     </div>
                     <div class="col-auto">
