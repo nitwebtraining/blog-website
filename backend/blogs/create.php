@@ -1,22 +1,55 @@
 <?php
+    // var_dump($_FILES);
+    // exit();
     $stmt = $pdo->prepare("SELECT * FROM categories ORDER BY name asc");
     $stmt->execute();
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $name   = $slug   = '';
-    $status = 1;
+    // Default values
+    $title          = $slug          = $short_description          = $long_description          = '';
+    $category_id    = null;
+    $featured_image = null;
+    // Session user_id (if exists)
+    $created_by = $_SESSION['user_id'] ?? 1;
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $name = trim($_POST['name']);
-        $slug = trim($_POST['slug']);
-        $slug = strtolower(str_replace(' ', '-', $slug));
+    $title             = trim($_POST['title']);
+    $slug              = trim(str_replace(' ', '-', strtolower($_POST['slug'])));
+    $category_id       = trim($_POST['category_id']);
+    $short_description = trim($_POST['short_description']);
+    $long_description  = trim($_POST['long_description']);
 
-        $stmt = $pdo->prepare(
-            "INSERT INTO posts (name, slug, status) VALUES (?, ?, ?)"
-        );
-        $stmt->execute([$name, $slug, $status]);
+    // ===== File Upload =====
+    if (! empty($_FILES['featured_image']['name'])) {
 
-        header("Location: " . BASE_URL . "admin/blogs");
-        exit();
+        $fileName   = time() . "-" . $_FILES['featured_image']['name'];
+        $targetPath = __DIR__ . "/../../uploads/" . $fileName;
+        move_uploaded_file($_FILES['featured_image']['tmp_name'], $targetPath);
+        $db_path        = "/uploads/" . $fileName;
+        $featured_image = $db_path;
+    }
+
+    // ===== INSERT QUERY =====
+    $stmt = $pdo->prepare("
+        INSERT INTO posts
+        (title, slug, category_id, featured_image, short_description, long_description, created_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    $stmt->execute([
+        $title,
+        $slug,
+        $category_id,
+        $featured_image,
+        $short_description,
+        $long_description,
+        $created_by,
+    ]);
+
+    $_SESSION['success'] = "Blog created successfully!";
+    header("Location: " . BASE_URL . "admin/blogs");
+    exit();
+
     }
 ?>
 
@@ -51,24 +84,50 @@
 
                     <div class="row">
                         <div class="col-lg-12">
-                            <!-- Form Basic -->
+                           <!-- Form Basic -->
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <form method="POST" autocomplete="off">
+                                    <form method="POST" autocomplete="off" enctype="multipart/form-data">
+
                                         <div class="form-group">
-                                            <label for="name">Title</label>
-                                            <input type="text" class="form-control" name="title" id="title" aria-describedby="title" placeholder="Enter Title">
+                                            <label for="title">Blog Title</label>
+                                            <input type="text" class="form-control" name="title" id="title" required>
                                         </div>
+
                                         <div class="form-group">
-                                            <label for="category_id">Category Name</label>
-                                           <select name="category_id" id="category_id" class="form-control">
-                                            <?php foreach ($categories as $category): ?>
-                                            <option value="<?php echo $category['id'] ?>"> <?php echo $category['name'] ?> </option>
-                                            <?php endforeach?>
-                                           </select>
+                                            <label for="slug">Blog Slug</label>
+                                            <input type="text" class="form-control" name="slug" id="slug" required>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                                        <div class="form-group">
+                                            <label for="category_id">Select Category</label>
+                                            <select name="category_id" id="category_id" class="form-control" required>
+                                                <option value="">Select Category</option>
+                                                <?php foreach ($categories as $category): ?>
+                                                <option value="<?php echo $category['id'] ?>"><?php echo $category['name'] ?></option>
+                                                <?php endforeach?>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="featured_image">Featured Image</label>
+                                            <input type="file" class="form-control" name="featured_image" id="featured_image">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="short_description">Short Description</label>
+                                            <textarea name="short_description" id="short_description" class="form-control" rows="3"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="long_description">Long Description</label>
+                                            <textarea name="long_description" id="long_description" class="form-control" rows="6"></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Create Blog</button>
+
                                     </form>
+
                                 </div>
                             </div>
                         </div>
