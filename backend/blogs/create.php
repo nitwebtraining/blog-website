@@ -121,7 +121,7 @@
 
                                         <div class="form-group">
                                             <label for="long_description">Long Description</label>
-                                            <textarea name="long_description" id="long_description" class="form-control" rows="6"></textarea>
+                                            <textarea name="long_description" id="long_description" class="form-control textEditor" rows="6"></textarea>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary">Create Blog</button>
