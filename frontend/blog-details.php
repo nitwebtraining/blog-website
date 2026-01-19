@@ -3,6 +3,28 @@
     <?php require_once __DIR__ . '/../config.php'?>
     <?php require_once __DIR__ . '/includes/head.php'; ?>
 
+    <?php
+
+        $slug = $_GET['slug'] ?? null;
+
+        if (! $slug) {
+            echo "Blog not found!";
+            exit();
+        }
+
+        $stmt = $pdo->prepare("SELECT * FROM posts WHERE slug = ?");
+        $stmt->execute([$slug]);
+        $post = $stmt->fetch(PDO::FETCH_ASSOC);
+        $postBy = $post['created_by'];
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$postBy]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (! $post) {
+            echo "Blog not found!";
+            exit();
+        }
+
+    ?>
 <body>
 
     <?php require_once __DIR__ . '/includes/navbar.php'; ?>
@@ -13,27 +35,17 @@
 
             <div class="col-lg-8">
                 <article>
-                    <h1 class="article-title">Web Design-er Shera 5-ti Tool ja apnar kajke shohoj korbe</h1>
+                    <h1 class="article-title"><?php echo $post['title']; ?></h1>
                     <div class="post-meta">
-                        <span><i class="far fa-user me-1"></i> Admin</span> |
-                        <span><i class="far fa-calendar me-1"></i> Dec 29, 2025</span> |
+                        <span><i class="far fa-user me-1"></i> <?php echo $user['name']; ?></span> |
+                        <span><i class="far fa-calendar me-1"></i> <?php echo date('F j, Y', strtotime($post['published_at'])) ?></span> |
                         <span><i class="far fa-comments me-1"></i> 12 Comments</span>
                     </div>
 
-                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="featured-image shadow-sm" alt="Web Design">
+                    <img src="<?php echo $post['featured_image']; ?>" class="featured-image shadow-sm" alt="Web Design">
 
                     <div class="main-content">
-                        <p>Web design-er jogot protiniyoto poriborton hochche. Ekjon designer hishebe apnake up-to-date thakte hobe. Aajke amra emon 5-ti tool niye kotha bolbo ja apnar workflow-ke aro fast korbe.</p>
-
-                        <h3>1. Figma (The King of Design)</h3>
-                        <p>Figma ekhon industry standard. Ete team collaboration er shubidha thakay designer ebong developer-ra ekshathe kaj korte pare.</p>
-
-                        <blockquote class="bg-light p-4 border-start border-primary border-4 italic">
-                            "Design is not just what it looks like and feels like. Design is how it works." - Steve Jobs
-                        </blockquote>
-
-                        <h3>2. Adobe Color</h3>
-                        <p>Apnar website er color palette nirbachon korar jonno Adobe Color er juri nei. Ekhane apni hazaro ready-made palette paben.</p>
+                        <p><?php echo $post['long_description']; ?></p>
                     </div>
 
                     <div class="author-box">
@@ -79,30 +91,7 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="widget-card card p-4 mb-4">
-                    <h5 class="fw-bold border-bottom pb-2 mb-3">Popular Posts</h5>
-                    <ul class="list-unstyled">
-                        <li class="mb-3">
-                            <a href="#" class="text-decoration-none text-dark d-flex align-items-center">
-                                <img src="https://picsum.photos/id/10/50" class="rounded me-3" alt="">
-                                <span class="small fw-600">Top 10 VS Code Extensions</span>
-                            </a>
-                        </li>
-                        <li class="mb-3">
-                            <a href="#" class="text-decoration-none text-dark d-flex align-items-center">
-                                <img src="https://picsum.photos/id/20/50" class="rounded me-3" alt="">
-                                <span class="small fw-600">JavaScript Roadmap 2025</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="widget-card card p-4 text-center bg-primary text-white">
-                    <h5>Newsletter</h5>
-                    <p class="small">Subscribe krun ebong mail-e blog post pon!</p>
-                    <input type="email" class="form-control mb-2" placeholder="Email">
-                    <button class="btn btn-light w-100">Subscribe</button>
-                </div>
+                <?php require_once __DIR__ . '/includes/sidebar.php'; ?>
             </div>
 
         </div>

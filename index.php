@@ -18,6 +18,18 @@ if (! $isLoggedIn && strpos($request, '/admin/dashboard') !== false) {
     exit();
 }
 
+
+/**
+ * ✅ Dynamic Blog Details Route: /blog/slug
+ */
+if (preg_match('#^/blog/([a-zA-Z0-9\-]+)$#', $request, $matches)) {
+    $_GET['slug'] = $matches[1];
+    require_once __DIR__ . '/frontend/blog-details.php';
+    exit();
+}
+
+
+
 // Router Logic
 switch ($request) {
     case '/':
@@ -37,9 +49,9 @@ switch ($request) {
         require_once __DIR__ . '/frontend/contact.php';
         break;
 
-    case '/blog-details':
-        require_once __DIR__ . '/frontend/blog-details.php';
-        break;
+    // case '/blog-details':
+    //     require_once __DIR__ . '/frontend/blog-details.php';
+    //     break;
 
     // backend route
     case '/admin/login':

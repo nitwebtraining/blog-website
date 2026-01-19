@@ -2,6 +2,14 @@
 <html lang="en">
     <?php require_once __DIR__ . '/../config.php'?>
     <?php require_once __DIR__ . '/includes/head.php'; ?>
+    <?php
+        $stmt = $pdo->prepare("SELECT posts.*, categories.name AS category_name
+        FROM posts
+        LEFT JOIN categories ON posts.category_id = categories.id
+        ORDER BY posts.id DESC LIMIT 3");
+        $stmt->execute();
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ?>
 
 <body>
 
@@ -11,25 +19,17 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-lg-8">
+                <?php foreach ($posts as $post) : ?>
                 <div class="card mb-4 overflow-hidden border-0 shadow-sm" data-aos="fade-up">
-                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" class="card-img-top" alt="post">
+                    <img src="<?php echo $post['featured_image']; ?>" class="card-img-top" alt="post">
                     <div class="card-body p-4">
-                        <span class="badge bg-primary-soft text-primary mb-2">Technology</span>
-                        <h2 class="h3 fw-bold">Web Design-er Shera 5-ti Tool</h2>
-                        <p class="text-muted">2024-e web design ke aro shohoj korte nicher tool gulo apnar proyojon...</p>
-                        <a href="/blog-details" class="btn btn-outline-primary btn-sm rounded-pill">Read More</a>
+                        <span class="badge bg-primary-soft text-primary mb-2"><?php echo $post['category_name']; ?></span>
+                        <h2 class="h3 fw-bold"><?php echo $post['title']; ?></h2>
+                        <p class="text-muted"><?php echo $post['short_description']; ?></p>
+                        <a href="<?php echo BASE_URL; ?>blog/<?php echo $post['slug']; ?>" class="btn btn-outline-primary btn-sm rounded-pill">Read More</a>
                     </div>
                 </div>
-
-                <div class="card mb-4 overflow-hidden border-0 shadow-sm" data-aos="fade-up">
-                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97" class="card-img-top" alt="post">
-                    <div class="card-body p-4">
-                        <span class="badge bg-success-soft text-success mb-2">Programming</span>
-                        <h2 class="h3 fw-bold">Python Keno Shekha Uchit?</h2>
-                        <p class="text-muted">Data Science theke shuru kore Automation—Python-er proyojoniyota ekhon shobar upore...</p>
-                        <a href="/blog-details" class="btn btn-outline-success btn-sm rounded-pill">Read More</a>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
 
             <div class="col-lg-4">
