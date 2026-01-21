@@ -124,7 +124,7 @@
 
                                         <div class="form-group">
                                             <label for="long_description">Long Description</label>
-                                            <textarea name="long_description" id="long_description" class="form-control" rows="6"><?php echo $post['long_description'] ?></textarea>
+                                            <textarea name="long_description" id="long_description" class="form-control textEditor" rows="6"><?php echo $post['long_description'] ?></textarea>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary">Update Blog</button>

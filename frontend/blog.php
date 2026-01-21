@@ -1,3 +1,14 @@
+<?php
+    $sql = "SELECT posts.*, categories.name AS category_name
+    FROM posts
+    LEFT JOIN categories ON posts.category_id = categories.id
+    ORDER BY posts.id DESC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
     <?php require_once __DIR__ . '/../config.php'?>
@@ -16,54 +27,22 @@
 
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <img src="https://picsum.photos/id/101/400/250" class="blog-img" alt="blog">
-                    <div class="card-body">
-                        <small class="text-primary fw-bold">Technology</small>
-                        <h5 class="card-title mt-2 fw-bold">Future of Web Development</h5>
-                        <p class="card-text text-muted small">AI kivabe web development-ke bodle dichche seta niye alochona...</p>
-                        <a href="details.html" class="stretched-link text-decoration-none text-dark"></a>
+            <?php foreach ($posts as $key => $post): ?>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="<?php echo $post['featured_image'] ?>" class="blog-img" alt="blog">
+                        <div class="card-body">
+                            <small class="text-primary fw-bold"><?php echo $post['category_name'] ?></small>
+                            <h5 class="card-title mt-2 fw-bold"><?php echo $post['title'] ?></h5>
+                            <p class="card-text text-muted small">
+                               <?php $short_description = strlen($post['short_description']) > 150 ? substr($post['short_description'], 0, 120) . '...' : $post['short_description'];
+                               echo $short_description; ?>
+                            </p>
+                            <a href="<?php echo BASE_URL; ?>blog/<?php echo $post['slug']; ?>" class="stretched-link text-decoration-none text-dark"></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <img src="https://picsum.photos/id/102/400/250" class="blog-img" alt="blog">
-                    <div class="card-body">
-                        <small class="text-success fw-bold">Life Style</small>
-                        <h5 class="card-title mt-2 fw-bold">Morning Routine Tips</h5>
-                        <p class="card-text text-muted small">Ekta pro-active din shuru korar sherka kichu upay...</p>
-                        <a href="details.html" class="stretched-link text-decoration-none text-dark"></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <img src="https://picsum.photos/id/103/400/250" class="blog-img" alt="blog">
-                    <div class="card-body">
-                        <small class="text-danger fw-bold">Travel</small>
-                        <h5 class="card-title mt-2 fw-bold">Exploring Cox's Bazar</h5>
-                        <p class="card-text text-muted small">Prithibir dirghotomo shomudro shoikot bhromon guide...</p>
-                        <a href="details.html" class="stretched-link text-decoration-none text-dark"></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100">
-                    <img src="https://picsum.photos/id/104/400/250" class="blog-img" alt="blog">
-                    <div class="card-body">
-                        <small class="text-warning fw-bold">Education</small>
-                        <h5 class="card-title mt-2 fw-bold">Best Coding Resources</h5>
-                        <p class="card-text text-muted small">Projukti shekhar free ebong paid sherka platform gulo...</p>
-                        <a href="details.html" class="stretched-link text-decoration-none text-dark"></a>
-                    </div>
-                </div>
-            </div>
-
+            <?php endforeach?>
             </div>
     </div>
 
